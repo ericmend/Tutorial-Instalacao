@@ -1,6 +1,6 @@
 #! /bin/bash
 
-ODOO_VERSION='11'
+ODOO_VERSION='15'
 
 echo "Esse script é focado na instalação do odoo V.$ODOO_VERSION"
 echo "com o foco em desenvolvimento."
@@ -270,6 +270,63 @@ then
     pip3 install python3-cnab
     pip3 install wheel
 
+elif [ $ODOO_VERSION == '15' ]
+then
+    echo "======== Caso a versão a versão seja odoo 15 ========"
+    echo "============= Virtualenv 3.10 será criado ============"
+
+    mkdir ~/odooenv310
+    sudo apt install python3-pip -y
+    sudo pip3 install virtualenv
+    cd ~/odooenv310
+    mkdir envpacks
+    cd envpacks
+
+    virtualenv -p /usr/bin/python3.10 ~/odooenv310/ve
+    source ~/odooenv310/ve/bin/activate
+    pip3 install --upgrade pip
+    pip3 install --upgrade setuptools
+    pip3 install Babel==2.9.1  # min version = 2.6.0 (Focal with security backports)
+    pip3 install chardet==3.0.4
+    pip3 install decorator==4.4.2
+    pip3 install docutils==0.16
+    pip3 install ebaysdk==2.1.5
+    pip3 install freezegun==0.3.15
+    pip3 install gevent==21.8.0
+    pip3 install greenlet==1.1.2
+    pip3 install idna==2.8
+    pip3 install Jinja2==2.11.3 # min version = 2.10.1 (Focal - with security backports)
+    pip3 install libsass==0.18.0
+    pip3 install lxml==4.6.5 # min version = 4.5.0 (Focal - with security backports)
+    pip3 install MarkupSafe==1.1.0
+    pip3 install num2words==0.5.6
+    pip3 install ofxparse==0.21
+    pip3 install passlib==1.7.3 # min version = 1.7.2 (Focal with security backports)
+    pip3 install Pillow==9.0.1  # min version = 7.0.0 (Focal with security backports)
+    pip3 install polib==1.1.0
+    pip3 install psutil==5.6.7 # min version = 5.5.1 (Focal with security backports)
+    pip3 install psycopg2==2.8.6
+    pip3 install pydot==1.4.1
+    pip3 install pyopenssl==19.0.0
+    pip3 install PyPDF2==1.26.0
+    pip3 install pypiwin32 ; sys_platform == 'win32'
+    pip3 install pyserial==3.4
+    pip3 install python-dateutil==2.7.3
+    pip3 install python-ldap==3.4.0 ; sys_platform != 'win32'  # min version = 3.2.0 (Focal with security backports)
+    pip3 install python-stdnum==1.13
+    pip3 install pytz==2019.3
+    pip3 install pyusb==1.0.2
+    pip3 install qrcode==6.1
+    pip3 install reportlab==3.5.59 # version < 3.5.54 are not compatible with Pillow 8.1.2 and 3.5.59 is bullseye
+    pip3 install requests==2.25.1 # versions < 2.25 aren't compatible w/ urllib3 1.26. Bullseye = 2.25.1. min version = 2.22.0 (Focal)
+    pip3 install urllib3==1.26.5 # indirect / min version = 1.25.8 (Focal with security backports)
+    pip3 install vobject==0.9.6.1
+    pip3 install Werkzeug==2.0.2
+    pip3 install xlrd==1.2.0
+    pip3 install XlsxWriter==1.1.2
+    pip3 install xlwt==1.3.*
+    pip3 install zeep==3.4.0
+
 fi
 
 
@@ -278,7 +335,7 @@ echo ">>> pip e seus requerimentos estão instalados. <<<"
 
 echo "Clonando repositório oficial Odoo no GitHub. Isso pode demorar um bom tempo."
 echo "Se sua internet é lenta, recomenda-se tomar um café enquanto aguarda."
-git clone --depth 1 https://github.com/odoo/odoo.git ~/odoo
+git clone --depth 1 https://github.com/ericmend/odoo.git ~/odoo
 cd ~/odoo
 git checkout $ODOO_VERSION.0
 
@@ -301,7 +358,7 @@ echo "db_password = 123" >> ~/odoo/odoo-config
 
 echo "Clonando repositório oficial dos módulos Odoo Brasil no GitHub."
 echo "Agora falta pouco."
-git clone https://github.com/Trust-Code/odoo-brasil.git ~/odoo-brasil
+git clone https://github.com/ericmend/odoo-brasil.git ~/odoo-brasil
 cd ~/odoo-brasil
 git checkout $ODOO_VERSION.0
 
@@ -332,4 +389,12 @@ then
     echo "cd ~/odoo"
     echo "git checkout $ODOO_VERSION.0"
     echo "./odoo-bin --config=odoo-config -d v11dev"
+elif [ $ODOO_VERSION == '15' ]
+then
+    echo "source ~/odooenv310/ve/bin/activate"
+    echo "cd ~/odoo-brasil"
+    echo "git checkout $ODOO_VERSION.0"
+    echo "cd ~/odoo"
+    echo "git checkout $ODOO_VERSION.0"
+    echo "./odoo-bin --config=odoo-config -d v15dev"
 fi
